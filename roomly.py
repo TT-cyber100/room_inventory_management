@@ -794,8 +794,39 @@ class App(Scene3D, tk.Tk):
             background="#fffefa", fieldbackground="#fffefa",
         )
 
-        self.build_interface()
         self.protocol("WM_DELETE_WINDOW", self.close)
+        self.show_start_screen()
+
+    def show_start_screen(self):
+        self.start_screen = tk.Frame(self, bg=BG)
+        self.start_screen.pack(fill="both", expand=True)
+
+        content = tk.Frame(self.start_screen, bg=BG)
+        content.place(relx=0.5, rely=0.5, anchor="center")
+        tk.Label(
+            content, text="roomly", font=("Helvetica", 24, "bold"),
+            bg=BG, fg=GREEN,
+        ).pack(pady=(0, 24))
+        tk.Label(
+            content, text="your room your space",
+            font=("Helvetica", 38, "bold"), bg=BG, fg=INK,
+        ).pack()
+        tk.Label(
+            content, text="每件物品都有自己的位置",
+            font=("Helvetica", 14), bg=BG, fg="#859189",
+        ).pack(pady=(18, 36))
+        self.start_button = ttk.Button(
+            content, text="进入我的房间", command=self.enter_room,
+        )
+        self.start_button.pack(ipadx=24, ipady=6)
+        self.start_button.focus_set()
+        self.start_button.bind("<Return>", lambda event: self.enter_room())
+
+    def enter_room(self):
+        if not self.start_screen.winfo_exists():
+            return
+        self.start_screen.destroy()
+        self.build_interface()
         self.refresh()
 
         if self.manager.warning:
